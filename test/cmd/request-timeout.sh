@@ -39,7 +39,11 @@ run_kubectl_request_timeout_tests() {
 
   ## check --request-timeout on 'get pod' with --watch
   output_message=$(kubectl get pod valid-pod --request-timeout=1 --watch --v=5 2>&1)
+<<<<<<< HEAD
   kube::test::if_has_string "${output_message}" 'Timeout exceeded while reading body'
+=======
+  kube::test::if_has_string "${output_message}" 'Timeout'
+>>>>>>> e79e352d36258abc5e5659289ec0fb13634bcbe7
 
   ## check --request-timeout value with no time unit
   output_message=$(kubectl get pod valid-pod --request-timeout=1 2>&1)

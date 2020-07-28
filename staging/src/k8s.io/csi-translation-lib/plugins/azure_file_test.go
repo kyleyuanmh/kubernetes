@@ -224,6 +224,48 @@ func TestTranslateAzureFileInTreePVToCSI(t *testing.T) {
 				},
 			},
 		},
+<<<<<<< HEAD
+=======
+		{
+			name: "azure file volume with rg annotation",
+			volume: &corev1.PersistentVolume{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:        "file.csi.azure.com-sharename",
+					Annotations: map[string]string{resourceGroupAnnotation: "rg"},
+				},
+				Spec: corev1.PersistentVolumeSpec{
+					PersistentVolumeSource: corev1.PersistentVolumeSource{
+						AzureFile: &corev1.AzureFilePersistentVolumeSource{
+							ShareName:       "sharename",
+							SecretName:      "secretname",
+							SecretNamespace: &secretNamespace,
+							ReadOnly:        true,
+						},
+					},
+				},
+			},
+			expVol: &corev1.PersistentVolume{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:        "file.csi.azure.com-sharename",
+					Annotations: map[string]string{resourceGroupAnnotation: "rg"},
+				},
+				Spec: corev1.PersistentVolumeSpec{
+					PersistentVolumeSource: corev1.PersistentVolumeSource{
+						CSI: &corev1.CSIPersistentVolumeSource{
+							Driver:   "file.csi.azure.com",
+							ReadOnly: true,
+							NodeStageSecretRef: &corev1.SecretReference{
+								Name:      "secretname",
+								Namespace: secretNamespace,
+							},
+							VolumeAttributes: map[string]string{azureFileShareName: "sharename"},
+							VolumeHandle:     "rg#secretname#sharename#",
+						},
+					},
+				},
+			},
+		},
+>>>>>>> e79e352d36258abc5e5659289ec0fb13634bcbe7
 	}
 
 	for _, tc := range cases {
@@ -231,12 +273,21 @@ func TestTranslateAzureFileInTreePVToCSI(t *testing.T) {
 		got, err := translator.TranslateInTreePVToCSI(tc.volume)
 		if err != nil && !tc.expErr {
 			t.Errorf("Did not expect error but got: %v", err)
+<<<<<<< HEAD
 		}
 
 		if err == nil && tc.expErr {
 			t.Errorf("Expected error, but did not get one.")
 		}
 
+=======
+		}
+
+		if err == nil && tc.expErr {
+			t.Errorf("Expected error, but did not get one.")
+		}
+
+>>>>>>> e79e352d36258abc5e5659289ec0fb13634bcbe7
 		if !reflect.DeepEqual(got, tc.expVol) {
 			t.Errorf("Got parameters: %v, expected :%v", got, tc.expVol)
 		}

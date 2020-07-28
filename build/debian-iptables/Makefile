@@ -21,7 +21,11 @@ ARCH?=amd64
 ALL_ARCH = amd64 arm arm64 ppc64le s390x
 TEMP_DIR:=$(shell mktemp -d)
 
+<<<<<<< HEAD
 BASE_REGISTRY?=us.gcr.io/k8s-artifacts-prod/build-image
+=======
+BASE_REGISTRY?=k8s.gcr.io/build-image
+>>>>>>> e79e352d36258abc5e5659289ec0fb13634bcbe7
 BASEIMAGE?=$(BASE_REGISTRY)/debian-base-$(ARCH):v2.1.0
 
 # This option is for running docker manifest command

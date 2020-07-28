@@ -17,10 +17,17 @@ go_test(
         "//staging/src/k8s.io/apimachinery/pkg/util/version:go_default_library",
     ] + select({
         "@io_bazel_rules_go//go/platform:android": [
+<<<<<<< HEAD
             "//third_party/forked/ipvs:go_default_library",
         ],
         "@io_bazel_rules_go//go/platform:linux": [
             "//third_party/forked/ipvs:go_default_library",
+=======
+            "//vendor/github.com/moby/ipvs:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "//vendor/github.com/moby/ipvs:go_default_library",
+>>>>>>> e79e352d36258abc5e5659289ec0fb13634bcbe7
         ],
         "//conditions:default": [],
     }),
@@ -38,9 +45,18 @@ go_library(
     deps = [
         "//staging/src/k8s.io/apimachinery/pkg/util/version:go_default_library",
     ] + select({
+        "@io_bazel_rules_go//go/platform:aix": [
+            "//vendor/k8s.io/utils/exec:go_default_library",
+        ],
         "@io_bazel_rules_go//go/platform:android": [
+<<<<<<< HEAD
             "//third_party/forked/ipvs:go_default_library",
             "//vendor/k8s.io/klog:go_default_library",
+=======
+            "//vendor/github.com/moby/ipvs:go_default_library",
+            "//vendor/github.com/pkg/errors:go_default_library",
+            "//vendor/k8s.io/klog/v2:go_default_library",
+>>>>>>> e79e352d36258abc5e5659289ec0fb13634bcbe7
             "//vendor/k8s.io/utils/exec:go_default_library",
         ],
         "@io_bazel_rules_go//go/platform:darwin": [
@@ -52,12 +68,24 @@ go_library(
         "@io_bazel_rules_go//go/platform:freebsd": [
             "//vendor/k8s.io/utils/exec:go_default_library",
         ],
+        "@io_bazel_rules_go//go/platform:illumos": [
+            "//vendor/k8s.io/utils/exec:go_default_library",
+        ],
         "@io_bazel_rules_go//go/platform:ios": [
             "//vendor/k8s.io/utils/exec:go_default_library",
         ],
+        "@io_bazel_rules_go//go/platform:js": [
+            "//vendor/k8s.io/utils/exec:go_default_library",
+        ],
         "@io_bazel_rules_go//go/platform:linux": [
+<<<<<<< HEAD
             "//third_party/forked/ipvs:go_default_library",
             "//vendor/k8s.io/klog:go_default_library",
+=======
+            "//vendor/github.com/moby/ipvs:go_default_library",
+            "//vendor/github.com/pkg/errors:go_default_library",
+            "//vendor/k8s.io/klog/v2:go_default_library",
+>>>>>>> e79e352d36258abc5e5659289ec0fb13634bcbe7
             "//vendor/k8s.io/utils/exec:go_default_library",
         ],
         "@io_bazel_rules_go//go/platform:nacl": [

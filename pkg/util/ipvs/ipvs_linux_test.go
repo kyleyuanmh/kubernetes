@@ -25,7 +25,11 @@ import (
 	"syscall"
 	"testing"
 
+<<<<<<< HEAD
 	libipvs "k8s.io/kubernetes/third_party/forked/ipvs"
+=======
+	libipvs "github.com/moby/ipvs"
+>>>>>>> e79e352d36258abc5e5659289ec0fb13634bcbe7
 )
 
 func Test_toVirtualServer(t *testing.T) {
@@ -181,7 +185,7 @@ func Test_toVirtualServer(t *testing.T) {
 		if !Tests[i].expectError && err != nil {
 			t.Errorf("case: %d, unexpected error: %v", i, err)
 		}
-		if got != nil && &Tests[i].virtualServer != nil {
+		if got != nil {
 			if !reflect.DeepEqual(*got, Tests[i].virtualServer) {
 				t.Errorf("case: %d, got %#v, want %#v", i, *got, Tests[i].virtualServer)
 			}

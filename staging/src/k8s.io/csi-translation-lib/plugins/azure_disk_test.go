@@ -22,6 +22,11 @@ import (
 	"testing"
 
 	corev1 "k8s.io/api/core/v1"
+<<<<<<< HEAD
+=======
+	v1 "k8s.io/api/core/v1"
+	storage "k8s.io/api/storage/v1"
+>>>>>>> e79e352d36258abc5e5659289ec0fb13634bcbe7
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -230,3 +235,67 @@ func TestTranslateAzureDiskInTreePVToCSI(t *testing.T) {
 		}
 	}
 }
+<<<<<<< HEAD
+=======
+
+func TestTranslateInTreeStorageClassToCSI(t *testing.T) {
+	translator := NewAzureDiskCSITranslator()
+
+	tcs := []struct {
+		name       string
+		options    *storage.StorageClass
+		expOptions *storage.StorageClass
+		expErr     bool
+	}{
+		{
+			name:       "nothing special",
+			options:    NewStorageClass(map[string]string{"foo": "bar"}, nil),
+			expOptions: NewStorageClass(map[string]string{"foo": "bar"}, nil),
+		},
+		{
+			name:       "empty params",
+			options:    NewStorageClass(map[string]string{}, nil),
+			expOptions: NewStorageClass(map[string]string{}, nil),
+		},
+		{
+			name:       "zone",
+			options:    NewStorageClass(map[string]string{"zone": "foo"}, nil),
+			expOptions: NewStorageClass(map[string]string{}, generateToplogySelectors(AzureDiskTopologyKey, []string{"foo"})),
+		},
+		{
+			name:       "zones",
+			options:    NewStorageClass(map[string]string{"zones": "foo,bar,baz"}, nil),
+			expOptions: NewStorageClass(map[string]string{}, generateToplogySelectors(AzureDiskTopologyKey, []string{"foo", "bar", "baz"})),
+		},
+		{
+			name:       "some normal topology",
+			options:    NewStorageClass(map[string]string{}, generateToplogySelectors(AzureDiskTopologyKey, []string{"foo"})),
+			expOptions: NewStorageClass(map[string]string{}, generateToplogySelectors(AzureDiskTopologyKey, []string{"foo"})),
+		},
+		{
+			name:       "some translated topology",
+			options:    NewStorageClass(map[string]string{}, generateToplogySelectors(v1.LabelZoneFailureDomain, []string{"foo"})),
+			expOptions: NewStorageClass(map[string]string{}, generateToplogySelectors(AzureDiskTopologyKey, []string{"foo"})),
+		},
+		{
+			name:    "zone and topology",
+			options: NewStorageClass(map[string]string{"zone": "foo"}, generateToplogySelectors(AzureDiskTopologyKey, []string{"foo"})),
+			expErr:  true,
+		},
+	}
+
+	for _, tc := range tcs {
+		t.Logf("Testing %v", tc.name)
+		gotOptions, err := translator.TranslateInTreeStorageClassToCSI(tc.options)
+		if err != nil && !tc.expErr {
+			t.Errorf("Did not expect error but got: %v", err)
+		}
+		if err == nil && tc.expErr {
+			t.Errorf("Expected error, but did not get one.")
+		}
+		if !reflect.DeepEqual(gotOptions, tc.expOptions) {
+			t.Errorf("Got parameters: %v, expected :%v", gotOptions, tc.expOptions)
+		}
+	}
+}
+>>>>>>> e79e352d36258abc5e5659289ec0fb13634bcbe7

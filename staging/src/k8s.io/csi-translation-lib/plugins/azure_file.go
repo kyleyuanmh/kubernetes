@@ -24,7 +24,11 @@ import (
 	v1 "k8s.io/api/core/v1"
 	storage "k8s.io/api/storage/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+<<<<<<< HEAD
 	"k8s.io/klog"
+=======
+	"k8s.io/klog/v2"
+>>>>>>> e79e352d36258abc5e5659289ec0fb13634bcbe7
 )
 
 const (
@@ -41,6 +45,11 @@ const (
 
 	secretNameTemplate     = "azure-storage-account-%s-secret"
 	defaultSecretNamespace = "default"
+<<<<<<< HEAD
+=======
+
+	resourceGroupAnnotation = "kubernetes.io/azure-file-resource-group"
+>>>>>>> e79e352d36258abc5e5659289ec0fb13634bcbe7
 )
 
 var _ InTreePlugin = &azureFileCSITranslator{}
@@ -115,8 +124,17 @@ func (t *azureFileCSITranslator) TranslateInTreePVToCSI(pv *v1.PersistentVolume)
 	if err != nil {
 		klog.Warningf("getStorageAccountName(%s) returned with error: %v", azureSource.SecretName, err)
 		accountName = azureSource.SecretName
+<<<<<<< HEAD
 	}
 	volumeID := fmt.Sprintf(volumeIDTemplate, "", accountName, azureSource.ShareName, "")
+=======
+	}
+	resourceGroup := ""
+	if v, ok := pv.ObjectMeta.Annotations[resourceGroupAnnotation]; ok {
+		resourceGroup = v
+	}
+	volumeID := fmt.Sprintf(volumeIDTemplate, resourceGroup, accountName, azureSource.ShareName, "")
+>>>>>>> e79e352d36258abc5e5659289ec0fb13634bcbe7
 
 	var (
 		// refer to https://github.com/kubernetes-sigs/azurefile-csi-driver/blob/master/docs/driver-parameters.md
@@ -155,6 +173,10 @@ func (t *azureFileCSITranslator) TranslateCSIPVToInTree(pv *v1.PersistentVolume)
 		ReadOnly: csiSource.ReadOnly,
 	}
 
+<<<<<<< HEAD
+=======
+	resourceGroup := ""
+>>>>>>> e79e352d36258abc5e5659289ec0fb13634bcbe7
 	if csiSource.NodeStageSecretRef != nil && csiSource.NodeStageSecretRef.Name != "" {
 		azureSource.SecretName = csiSource.NodeStageSecretRef.Name
 		azureSource.SecretNamespace = &csiSource.NodeStageSecretRef.Namespace
@@ -164,16 +186,27 @@ func (t *azureFileCSITranslator) TranslateCSIPVToInTree(pv *v1.PersistentVolume)
 			}
 		}
 	} else {
+<<<<<<< HEAD
 		_, storageAccount, fileShareName, _, err := getFileShareInfo(csiSource.VolumeHandle)
+=======
+		rg, storageAccount, fileShareName, _, err := getFileShareInfo(csiSource.VolumeHandle)
+>>>>>>> e79e352d36258abc5e5659289ec0fb13634bcbe7
 		if err != nil {
 			return nil, err
 		}
 		azureSource.ShareName = fileShareName
 		azureSource.SecretName = fmt.Sprintf(secretNameTemplate, storageAccount)
+<<<<<<< HEAD
+=======
+		resourceGroup = rg
+>>>>>>> e79e352d36258abc5e5659289ec0fb13634bcbe7
 	}
 
 	pv.Spec.CSI = nil
 	pv.Spec.AzureFile = azureSource
+	if resourceGroup != "" {
+		pv.ObjectMeta.Annotations[resourceGroupAnnotation] = resourceGroup
+	}
 
 	return pv, nil
 }
